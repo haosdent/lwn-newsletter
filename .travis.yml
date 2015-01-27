@@ -1,6 +1,9 @@
 language: go
 go:
- - release
- - tip
+    - release
+    - tip
 
-script: "go test -v ./src/lwn"
+install:
+    - go get github.com/haosdent/commons-configuration
+script:
+    - go test -v ./src/lwn
