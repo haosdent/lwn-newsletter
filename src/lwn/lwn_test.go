@@ -28,7 +28,7 @@ func TestSendEmail(t *testing.T) {
     if err == nil {
         return
     }
-    if !strings.Contains(err.Error(), "Username and Password not accepted.") || !strings.Contains(err.Error(), "587: connection refused") {
+    if !strings.Contains(err.Error(), "Username and Password not accepted.") && !strings.Contains(err.Error(), "connection refused") && !strings.Contains(err.Error(), "operation timed out") {
         log.Fatal(err)
     }
 }
