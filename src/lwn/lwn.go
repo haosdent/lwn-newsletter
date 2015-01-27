@@ -2,6 +2,7 @@ package lwn
 
 import (
     "fmt"
+    "time"
     "io/ioutil"
     "net/http"
     "net/smtp"
@@ -9,8 +10,8 @@ import (
     "encoding/base64"
 )
 
-func GetLwnLink() (string, error) {
-    resp, err := http.Get("http://lwn.net/Archives/")
+func GetLwnLink(category string) (string, error) {
+    resp, err := http.Get(fmt.Sprintf("http://lwn.net/%s/", category))
     if err != nil {
         return "", err
     }
@@ -23,11 +24,11 @@ func GetLwnLink() (string, error) {
     link := ""
     index := 0
     for i := 0; i < len(lines); i++ {
-        if strings.Contains(lines[i], "One big page") {
+        if strings.Contains(lines[i], "<td valign=\"top\"><a href=\"/Articles/") {
             index++
             if index == 2 {
-                link = strings.TrimSpace(lines[i])[10:]
-                link = "http://lwn.net" + link[:len(link) - 19]
+                link = strings.TrimSpace(lines[i])[26:]
+                link = "http://lwn.net" + link[:len(link) - 33]
                 break
             }
         }
@@ -35,8 +36,8 @@ func GetLwnLink() (string, error) {
     return link, nil
 }
 
-func GetLwnContent() (string, error) {
-    link, err := GetLwnLink()
+func GetLwnContent(category string) (string, error) {
+    link, err := GetLwnLink(category)
     if err != nil {
         return "", err
     }
@@ -58,9 +59,10 @@ func GetLwnContent() (string, error) {
     return content, nil
 }
 
-func SendEmail(content string, receiver string, password string, server string, port int) error {
+func SendEmail(category string, content string, receiver string, password string, server string, port int) error {
     sender := "noreply@lwn.net"
-    subject := content[strings.Index(content, "LWN"):strings.Index(content, "</h1>")]
+    t := time.Now().Local()
+    subject := fmt.Sprintf("[LWN] %s Newsletter %s %02d, %04d", category, t.Month(), t.Day(), t.Year())
 
     template := "Content-Type: text/html; charset=\"utf-8\"\r\nMIME-Version: 1.0\r\nContent-Transfer-Encoding: base64\r\nFrom: %s\r\nTo: %s\r\nSubject: %s\r\n\r\n%s\r\n.\r\n"
     content = fmt.Sprintf(template, sender, receiver, subject, base64.StdEncoding.EncodeToString([]byte(content)))

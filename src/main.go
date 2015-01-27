@@ -17,6 +17,10 @@ func main() {
 
     path := os.Args[1]
     var conf config.Configer = config.NewIniConfig(path)
+    category, err := conf.Get("category")
+    if err != nil {
+        log.Fatal(err)
+    }
     receiver, err := conf.Get("receiver")
     if err != nil {
         log.Fatal(err)
@@ -37,11 +41,11 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
-    content, err := lwn.GetLwnContent()
+    content, err := lwn.GetLwnContent(category)
     if err != nil {
         log.Fatal(err)
     }
-    err = lwn.SendEmail(content, receiver, password, server, port)
+    err = lwn.SendEmail(category, content, receiver, password, server, port)
     if err != nil {
         log.Fatal(err)
     } else {

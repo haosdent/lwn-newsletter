@@ -7,22 +7,27 @@ import (
 )
 
 func TestGetLwnContent(t *testing.T) {
-    _, err := GetLwnContent()
+    category := "Security"
+    _, err := GetLwnContent(category)
     if err != nil {
         log.Fatal(err)
     }
 }
 
 func TestSendEmail(t *testing.T) {
+    category := "Kernel"
     receiver := "xxx"
     password := "xxx"
     server := "smtp.gmail.com"
     port := 587
-    content, err := GetLwnContent()
+    content, err := GetLwnContent(category)
     if err != nil {
         log.Fatal(err)
     }
-    err = SendEmail(content, receiver, password, server, port)
+    err = SendEmail(category, content, receiver, password, server, port)
+    if err == nil {
+        return
+    }
     if !strings.Contains(err.Error(), "Username and Password not accepted.") || !strings.Contains(err.Error(), "587: connection refused") {
         log.Fatal(err)
     }

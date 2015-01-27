@@ -5,6 +5,7 @@
 ## Config File Example
 
 ```
+category=Kernel # Support Kernel, Security and Distributions
 receiver=xxx@gmail.com
 password=xxx
 server=smtp.gmail.com
