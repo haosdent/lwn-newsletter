@@ -3,4 +3,4 @@ go:
  - release
  - tip
 
-script: go test -v ./src/lwn
+script: "go test -v ./src/lwn"
