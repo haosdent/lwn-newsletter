@@ -3,6 +3,10 @@ go:
     - release
     - tip
 
+env:
+    global:
+    - GOPATH=$TRAVIS_BUILD_DIR
+
 install:
     - go get github.com/haosdent/commons-configuration
     - go build -o lwn_newsletter src/main.go
