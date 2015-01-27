@@ -1,5 +1,7 @@
 # lwn-newsletter
 
+A tool to subscribe Linux weekly archives. Just for fun.
+
 [![Build Status](https://travis-ci.org/haosdent/lwn-newsletter.svg?branch=master)](https://travis-ci.org/haosdent/lwn-newsletter)
 
 ## Config File Example
