@@ -18,4 +18,10 @@ port=587
          ./lwn_newsletter [config file location]
 ```
 
+Add to crontab
+
+```
+5 8 * * 6 your_user_name lwn_newsletter [config file location]
+```
+
 And then check your email please. :-)
