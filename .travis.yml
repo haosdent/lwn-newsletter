@@ -3,14 +3,7 @@ go:
     - release
     - tip
 
-env:
-    global:
-    - GOPATH=$TRAVIS_BUILD_DIR
-    - REPO="haosdent/lwn-newsletter"
-    - GOPATH=`pwd`/$REPO
-
 install:
     - go get github.com/haosdent/commons-configuration
-    - go build -o lwn_newsletter src/main.go
 script:
     - go test -v ./src/lwn
