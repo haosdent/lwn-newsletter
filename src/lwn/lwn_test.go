@@ -2,11 +2,15 @@ package lwn
 
 import (
     "log"
+    "strings"
     "testing"
 )
 
 func TestGetLwnContent(t *testing.T) {
-    GetLwnContent()
+    _, err := GetLwnContent()
+    if err != nil {
+        log.Fatal(err)
+    }
 }
 
 func TestSendEmail(t *testing.T) {
@@ -14,5 +18,12 @@ func TestSendEmail(t *testing.T) {
     password := "xxx"
     server := "smtp.gmail.com"
     port := 587
-    SendEmail(GetLwnContent(), receiver, password, server, port)
+    content, err := GetLwnContent()
+    if err != nil {
+        log.Fatal(err)
+    }
+    err = SendEmail(content, receiver, password, server, port)
+    if !strings.Contains(err.Error(), "Username and Password not accepted.") {
+        log.Fatal(err)
+    }
 }

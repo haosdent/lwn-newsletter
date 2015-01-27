@@ -37,7 +37,14 @@ func main() {
     if err != nil {
         log.Fatal(err)
     }
-    content := lwn.GetLwnContent()
-    lwn.SendEmail(content, receiver, password, server, port)
-    fmt.Printf("Send lwn weekly to %s success!\n", receiver)
+    content, err := lwn.GetLwnContent()
+    if err != nil {
+        log.Fatal(err)
+    }
+    err = lwn.SendEmail(content, receiver, password, server, port)
+    if err != nil {
+        log.Fatal(err)
+    } else {
+        fmt.Printf("Send lwn weekly to %s success!\n", receiver)
+    }
 }

@@ -3,22 +3,21 @@ package lwn
 import (
     "fmt"
     "io/ioutil"
-    "log"
     "net/http"
     "net/smtp"
     "strings"
     "encoding/base64"
 )
 
-func GetLwnLink() string {
+func GetLwnLink() (string, error) {
     resp, err := http.Get("http://lwn.net/Archives/")
     if err != nil {
-        log.Fatal(err)
+        return "", err
     }
     body, err := ioutil.ReadAll(resp.Body)
     resp.Body.Close()
     if err != nil {
-        log.Fatal(err)
+        return "", err
     }
     lines := strings.Split(string(body[:]), "\n")
     link := ""
@@ -33,19 +32,22 @@ func GetLwnLink() string {
             }
         }
     }
-    return link
+    return link, nil
 }
 
-func GetLwnContent() string {
-    link := GetLwnLink()
+func GetLwnContent() (string, error) {
+    link, err := GetLwnLink()
+    if err != nil {
+        return "", err
+    }
     resp, err := http.Get(link)
     if err != nil {
-        log.Fatal(err)
+        return "", err
     }
     body, err := ioutil.ReadAll(resp.Body)
     resp.Body.Close()
     if err != nil {
-        log.Fatal(err)
+        return "", err
     }
     sBody := string(body[:])
     start := strings.Index(sBody, "<div class=\"PageHeadline\">")
@@ -53,10 +55,10 @@ func GetLwnContent() string {
     content := sBody[start:end]
     content = strings.Replace(content, "href=\"/", "href=\"http://lwn.net/", -1)
     content = strings.Replace(content, "src=\"/", "src=\"http://lwn.net/", -1)
-    return content
+    return content, nil
 }
 
-func SendEmail(content string, receiver string, password string, server string, port int) {
+func SendEmail(content string, receiver string, password string, server string, port int) error {
     sender := "noreply@lwn.net"
     subject := content[strings.Index(content, "LWN"):strings.Index(content, "</h1>")]
 
@@ -64,7 +66,5 @@ func SendEmail(content string, receiver string, password string, server string, 
     content = fmt.Sprintf(template, sender, receiver, subject, base64.StdEncoding.EncodeToString([]byte(content)))
     auth := smtp.PlainAuth("", receiver, password, server)
     err := smtp.SendMail(fmt.Sprintf("%s:%d", server, port), auth, sender, []string{receiver}, []byte(content))
-    if err != nil {
-        log.Fatal(err)
-    }
+    return err
 }
