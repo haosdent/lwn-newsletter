@@ -6,6 +6,8 @@ go:
 env:
     global:
     - GOPATH=$TRAVIS_BUILD_DIR
+    - REPO="haosdent/lwn-newsletter"
+    - GOPATH=`pwd`/$REPO
 
 install:
     - go get github.com/haosdent/commons-configuration
