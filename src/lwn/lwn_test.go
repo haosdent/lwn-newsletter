@@ -1,6 +1,7 @@
 package lwn
 
 import (
+    "log"
     "testing"
 )
 
@@ -13,5 +14,5 @@ func TestSendEmail(t *testing.T) {
     password := "xxx"
     server := "smtp.gmail.com"
     port := 587
-    SendEmail("hello world!", receiver, password, server, port)
+    SendEmail(GetLwnContent(), receiver, password, server, port)
 }
