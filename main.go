@@ -4,7 +4,7 @@ import (
     "os"
     "log"
     "fmt"
-    "lwn"
+    "github.com/haosdent/lwn-newsletter/lwn"
     "strconv"
     "github.com/haosdent/commons-configuration"
 )
